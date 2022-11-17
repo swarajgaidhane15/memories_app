@@ -11,4 +11,13 @@ export default makeStyles((theme) => ({
   actionDiv: {
     textAlign: "center",
   },
+  no_post: {
+    backgroundColor: "white",
+    marginTop: "2rem",
+    textAlign: "center",
+    fontWeight: "600",
+    borderRadius: "0.4rem",
+    padding: "0.5rem",
+    paddingBottom: "1rem"
+  },
 }));

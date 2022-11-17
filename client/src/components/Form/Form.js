@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 
-import { createPost } from "../../slices/postAction";
+import { createPost, updatePost } from "../../slices/postAction";
 
 import useStyles from "./styles";
 
-const Form = () => {
+const Form = ({ titleInputRef, currentId, setCurrentId }) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -18,21 +18,30 @@ const Form = () => {
     tags: "",
     selectedFile: "",
   });
+  const post = useSelector((state) =>
+    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
+  );
+
+  useEffect(() => {
+    if (post) setPostData(post);
+  }, [post]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(createPost(postData));
-    setPostData({
-      creator: "",
-      title: "",
-      message: "",
-      tags: "",
-      selectedFile: "",
-    });
+    if (currentId != null) dispatch(updatePost(currentId, postData));
+    else dispatch(createPost(postData));
+
+    clear();
+  };
+
+  const shouldDisableSubmit = () => {
+    const { creator, title, message } = postData;
+    return !(creator && title && message);
   };
 
   const clear = () => {
+    setCurrentId(null);
     setPostData({
       creator: "",
       title: "",
@@ -50,14 +59,15 @@ const Form = () => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        {/* <Typography variant="h6">
+        <Typography variant="h6">
           {currentId ? `Editing "${post.title}"` : "Creating a Memory"}
-        </Typography> */}
+        </Typography>
         <TextField
           name="creator"
           variant="outlined"
           label="Creator"
           fullWidth
+          inputRef={titleInputRef}
           value={postData.creator}
           onChange={(e) =>
             setPostData({ ...postData, creator: e.target.value })
@@ -109,6 +119,7 @@ const Form = () => {
           size="large"
           type="submit"
           fullWidth
+          disabled={shouldDisableSubmit()}
         >
           Submit
         </Button>

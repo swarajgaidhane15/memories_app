@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 
@@ -15,9 +15,13 @@ const App = () => {
 
   const dispatch = useDispatch();
 
+  const [currentId, setCurrentId] = useState(null);
+
+  const titleInputRef = useRef(null);
+
   useEffect(() => {
     dispatch(getPosts());
-  }, [dispatch]);
+  }, [currentId, dispatch]);
 
   return (
     <Container maxWidth="lg">
@@ -36,10 +40,10 @@ const App = () => {
             spacing={3}
           >
             <Grid item xs={12} sm={7}>
-              <Posts />
+              <Posts setCurrentId={setCurrentId} titleInputRef={titleInputRef} />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Form />
+              <Form titleInputRef={titleInputRef} currentId={currentId} setCurrentId={setCurrentId} />
             </Grid>
           </Grid>
         </Container>
