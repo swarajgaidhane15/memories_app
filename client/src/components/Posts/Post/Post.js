@@ -46,13 +46,13 @@ const Post = ({ post, setCurrentId }) => {
           <MoreHorizIcon fontSize="medium" />
         </Button>
       </div>
-      {post.tags.length && (
+      {/* {post.tags.length && (
         <div className={classes.details}>
           <Typography variant="body2" color="textSecondary" component="h2">
             {post.tags.map((tag) => tag && `#${tag} `)}
           </Typography>
         </div>
-      )}
+      )} */}
       <Typography
         className={classes.title}
         gutterBottom
