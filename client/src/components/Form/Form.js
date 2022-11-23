@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import FileBase from "react-file-base64";
 
 import { createPost, updatePost } from "../../slices/postAction";
@@ -10,9 +11,10 @@ import useStyles from "./styles";
 const Form = ({ titleInputRef, currentId, setCurrentId }) => {
   const classes = useStyles();
 
+  const user = JSON.parse(localStorage.getItem("profile"))?.result;
+
   const dispatch = useDispatch();
   const [postData, setPostData] = useState({
-    creator: "",
     title: "",
     message: "",
     tags: "",
@@ -30,26 +32,41 @@ const Form = ({ titleInputRef, currentId, setCurrentId }) => {
     e.preventDefault();
 
     if (currentId != null) dispatch(updatePost(currentId, postData));
-    else dispatch(createPost(postData));
+    else dispatch(createPost({ ...postData, name: user?.name }));
 
     clear();
   };
 
   const shouldDisableSubmit = () => {
-    const { creator, title, message } = postData;
-    return !(creator && title && message);
+    const { title, message } = postData;
+    return !(title && message);
   };
 
   const clear = () => {
     setCurrentId(null);
     setPostData({
-      creator: "",
       title: "",
       message: "",
       tags: "",
       selectedFile: "",
     });
   };
+
+  if (!user?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please signin to create a memory or like other's memory
+          <br />
+          <Link to="/auth">
+            <Button variant="contained" color="secondary" size="small">
+              Sign In here
+            </Button>
+          </Link>
+        </Typography>
+      </Paper>
+    );
+  }
 
   return (
     <Paper className={classes.paper}>
@@ -63,20 +80,10 @@ const Form = ({ titleInputRef, currentId, setCurrentId }) => {
           {currentId ? `Editing "${post.title}"` : "Creating a Memory"}
         </Typography>
         <TextField
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-          inputRef={titleInputRef}
-          value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
-        />
-        <TextField
           name="title"
           variant="outlined"
           label="Title"
+          inputRef={titleInputRef}
           fullWidth
           value={postData.title}
           onChange={(e) => setPostData({ ...postData, title: e.target.value })}

@@ -1,14 +1,24 @@
 import axios from "axios";
 
-const url = "/posts";
+const postsUrl = "/posts";
+const authUrl = "/auth";
 
-export const fetchPosts = () => axios.get(url);
+// Add a request interceptor
+axios.interceptors.request.use((req) => {
+  if (localStorage.getItem("profile")) {
+    const { token } = JSON.parse(localStorage.getItem("profile"));
+    req.headers.Authorization = `Bearer ${token}`;
+  }
 
-export const createPost = (newPost) => axios.post(url, newPost);
+  return req;
+});
 
+export const fetchPosts = () => axios.get(postsUrl);
+export const createPost = (newPost) => axios.post(postsUrl, newPost);
 export const updatePost = (id, updatedPost) =>
-  axios.patch(`${url}/${id}`, updatedPost);
+  axios.patch(`${postsUrl}/${id}`, updatedPost);
+export const deletePost = (id) => axios.delete(`${postsUrl}/${id}`);
+export const likePost = (id) => axios.patch(`${postsUrl}/${id}/likepost`);
 
-export const deletePost = (id) => axios.delete(`${url}/${id}`);
-
-export const likePost = (id) => axios.patch(`${url}/${id}/likepost`);
+export const signIn = (formdata) => axios.post(`${authUrl}/signin`, formdata);
+export const signUp = (formdata) => axios.post(`${authUrl}/signup`, formdata);

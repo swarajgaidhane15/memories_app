@@ -1,9 +1,10 @@
-import { authenticateUser, logoutUser } from "./authSlice";
+import * as api from "../api";
+
+import { authenticateUser, logoutUser, setError } from "./authSlice";
 
 export const authenticateUserByGoogle = (data) => {
   return (dispatch) => {
     try {
-      localStorage.setItem("profile", JSON.stringify(data));
       dispatch(authenticateUser(data));
     } catch (error) {
       console.log(error.message);
@@ -25,9 +26,15 @@ export const logoutAction = () => {
 export const signin = (formData, navigate) => {
   return async (dispatch) => {
     try {
+      const { data } = await api.signIn(formData);
+
+      dispatch(authenticateUser(data));
+
       navigate("/");
     } catch (error) {
-      console.log(error.message);
+      const { message } = error.response?.data;
+
+      dispatch(setError(message));
     }
   };
 };
@@ -35,9 +42,15 @@ export const signin = (formData, navigate) => {
 export const signup = (formData, navigate) => {
   return async (dispatch) => {
     try {
+      const { data } = await api.signUp(formData);
+
+      dispatch(authenticateUser(data));
+
       navigate("/");
     } catch (error) {
-      console.log(error.message);
+      const { message } = error.response?.data;
+
+      dispatch(setError(message));
     }
   };
 };

@@ -32,6 +32,12 @@ export default makeStyles({
     top: "20px",
     right: "20px",
     color: "white",
+
+    "&:hover": {
+      backgroundColor: "#353836",
+      borderRadius: "0.3rem",
+      transition: "all 0.3s",
+    },
   },
   grid: {
     display: "flex",

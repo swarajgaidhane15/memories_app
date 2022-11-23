@@ -9,6 +9,8 @@ import useStyles from "./styles";
 const Posts = ({ titleInputRef, setCurrentId }) => {
   const classes = useStyles();
 
+  const user = JSON.parse(localStorage.getItem("profile"))?.result;
+
   const { posts } = useSelector((state) => state.posts);
   const [noPosts, setNoPosts] = useState(false);
 
@@ -28,6 +30,7 @@ const Posts = ({ titleInputRef, setCurrentId }) => {
           color="secondary"
           size="small"
           onClick={() => titleInputRef.current.focus()}
+          disabled={!user}
         >
           Create One 😉
         </Button>
