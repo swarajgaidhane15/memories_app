@@ -54,7 +54,7 @@ const Form = ({ titleInputRef, currentId, setCurrentId }) => {
 
   if (!user?.name) {
     return (
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={6}>
         <Typography variant="h6" align="center">
           Please signin to create a memory or like other's memory
           <br />

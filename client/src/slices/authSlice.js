@@ -4,27 +4,26 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: {
     auth: {},
-    error: "",
   },
   reducers: {
     authenticateUser: (state, { payload }) => {
       localStorage.setItem("profile", JSON.stringify(payload));
-      state.error = "";
-      state.auth = payload;
+
+      return {
+        ...state,
+        error: "",
+        auth: payload,
+      };
     },
     logoutUser: (state, payload) => {
-      state.auth = {};
-    },
-    setError: (state, { payload }) => {
-      state.error = payload;
-    },
-    resetError: (state) => {
-      state.error = "";
+      return {
+        ...state,
+        auth: {},
+      };
     },
   },
 });
 
-export const { authenticateUser, logoutUser, setError, resetError } =
-  authSlice.actions;
+export const { authenticateUser, logoutUser } = authSlice.actions;
 
 export default authSlice.reducer;

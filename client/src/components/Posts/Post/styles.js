@@ -32,12 +32,6 @@ export default makeStyles({
     top: "20px",
     right: "20px",
     color: "white",
-
-    "&:hover": {
-      backgroundColor: "#353836",
-      borderRadius: "0.3rem",
-      transition: "all 0.3s",
-    },
   },
   grid: {
     display: "flex",
@@ -54,5 +48,9 @@ export default makeStyles({
     padding: "0 16px 8px 16px",
     display: "flex",
     justifyContent: "space-between",
+  },
+  cardAction: {
+    display: "block",
+    textAlign: "initial",
   },
 });

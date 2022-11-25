@@ -1,13 +1,14 @@
 import * as api from "../api";
 
-import { authenticateUser, logoutUser, setError } from "./authSlice";
+import { authenticateUser, logoutUser } from "./authSlice";
+import { setError } from "./errorAction";
 
 export const authenticateUserByGoogle = (data) => {
   return (dispatch) => {
     try {
       dispatch(authenticateUser(data));
     } catch (error) {
-      console.log(error.message);
+      dispatch(setError('UNKNOWN_ERROR'))
     }
   };
 };
@@ -18,7 +19,7 @@ export const logoutAction = () => {
       localStorage.removeItem("profile");
       dispatch(logoutUser());
     } catch (error) {
-      console.log(error.message);
+      dispatch(setError('UNKNOWN_ERROR'))
     }
   };
 };
@@ -48,9 +49,7 @@ export const signup = (formData, navigate) => {
 
       navigate("/");
     } catch (error) {
-      const { message } = error.response?.data;
-
-      dispatch(setError(message));
+      dispatch(setError('UNKNOWN_ERROR'))
     }
   };
 };

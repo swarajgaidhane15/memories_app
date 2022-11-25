@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Grid, CircularProgress, Button, Typography } from "@material-ui/core";
+import { Grid, Button, Typography } from "@material-ui/core";
 
 import Post from "./Post/Post";
+import Loader from "../SkeletonLoader/Loader";
 
 import useStyles from "./styles";
 
@@ -20,7 +21,7 @@ const Posts = ({ titleInputRef, setCurrentId }) => {
     }, 5000);
   }, [posts]);
 
-  return !posts.length ? (
+  return !posts?.length ? (
     noPosts ? (
       <Typography variant="h6" className={classes.no_post}>
         Looks like there are no memories ☹️
@@ -36,7 +37,11 @@ const Posts = ({ titleInputRef, setCurrentId }) => {
         </Button>
       </Typography>
     ) : (
-      <CircularProgress />
+      <div className={classes.mainContainer}>
+        {[...Array(4)].map((t, i) => (
+          <Loader key={i} />
+        ))}
+      </div>
     )
   ) : (
     <Grid
@@ -46,7 +51,7 @@ const Posts = ({ titleInputRef, setCurrentId }) => {
       spacing={3}
     >
       {posts.map((post) => (
-        <Grid key={post._id} item xs={12} sm={6} md={6}>
+        <Grid key={post._id} item xs={12} sm={12} md={6} lg={3}>
           <Post post={post} setCurrentId={setCurrentId} />
         </Grid>
       ))}

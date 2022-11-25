@@ -10,7 +10,7 @@ export const signin = async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
+      return res.status(404).json({ message: "USER_DOESNT_EXIST" });
 
     const isPasswordCorrect = await bcrypt.compare(
       password,
@@ -18,7 +18,7 @@ export const signin = async (req, res) => {
     );
 
     if (!isPasswordCorrect)
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "INVALID_CREDENTIALS" });
 
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
@@ -30,9 +30,10 @@ export const signin = async (req, res) => {
 
     res.status(200).json({ result: existingUser, token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: "UNKNOWN_ERROR" });
   }
 };
+
 export const signup = async (req, res) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
 
@@ -40,10 +41,10 @@ export const signup = async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser)
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "USER_ALREADY_EXIST" });
 
     if (password !== confirmPassword)
-      return res.status(400).json({ message: "Passwords don't match" });
+      return res.status(400).json({ message: "PASSWORD_DOESNT_MATCH" });
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -63,6 +64,6 @@ export const signup = async (req, res) => {
 
     res.status(200).json({ result: newUser, token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: "UNKNOWN_ERROR" });
   }
 };

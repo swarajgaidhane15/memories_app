@@ -1,11 +1,13 @@
+import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";
 
 import store from "./store";
 import { Provider } from "react-redux";
 
-import App from "./App";
+import "./index.css";
 
-import "./index.css"
+import LoadingPage from "./components/SkeletonLoader/LoadingPage";
+const App = React.lazy(() => import("./App"));
 
 const container = document.getElementById("root");
 
@@ -13,6 +15,8 @@ const root = createRoot(container);
 
 root.render(
   <Provider store={store}>
-    <App />
+    <Suspense fallback={<LoadingPage />}>
+      <App />
+    </Suspense>
   </Provider>
 );

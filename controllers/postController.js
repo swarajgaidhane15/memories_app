@@ -1,9 +1,51 @@
-import mongoose from "mongoose";
+import mongoose, { get } from "mongoose";
 import Post from "../models/post.js";
 
 export const getAllPosts = async (req, res) => {
+  const { page } = req.query;
   try {
-    const posts = await Post.find();
+    const LIMIT = 8;
+    const startIndex = (Number(page) - 1) * LIMIT;
+    const total = await Post.countDocuments({});
+
+    const posts = await Post.find()
+      .sort({ _id: -1 })
+      .limit(LIMIT)
+      .skip(startIndex);
+    res
+      .status(200)
+      .json({
+        posts,
+        currentPage: Number(page),
+        numberOfPages: Math.ceil(total / LIMIT),
+      });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getPost = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const post = await Post.findById(id);
+
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const fetchPostsBySearch = async (req, res) => {
+  const { searchQuery, tags } = req.query;
+
+  try {
+    const title = new RegExp(searchQuery, "i");
+
+    const posts = await Post.find({
+      $or: [{ title }, { tags: { $in: tags.split(",") } }],
+    });
+
     res.status(200).json(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });

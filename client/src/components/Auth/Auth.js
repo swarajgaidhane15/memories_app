@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -9,7 +9,6 @@ import {
   Grid,
   Typography,
   Container,
-  CircularProgress,
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { GoogleLogin } from "react-google-login";
@@ -26,7 +25,7 @@ import Input from "./Input";
 import Icon from "./icon";
 
 import useStyles from "./styles";
-import { resetError } from "../../slices/authSlice";
+import { setError } from "../../slices/errorAction";
 
 const initialState = {
   firstName: "",
@@ -40,9 +39,6 @@ const Auth = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState(initialState);
-  const [progress, setProgress] = useState(0);
-
-  const { error } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,7 +48,8 @@ const Auth = () => {
   useEffect(() => {
     function start() {
       gapi.client.init({
-        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        clientId:
+          "684382116518-7ldeoeun521n5odegl70meeqkd195qnc.apps.googleusercontent.com",
         scope: "email",
       });
     }
@@ -63,7 +60,6 @@ const Auth = () => {
   const switchMode = () => {
     setIsSignup(!isSignup);
     setShowPassword(false);
-    dispatch(resetError());
   };
 
   const handleSubmit = (e) => {
@@ -71,16 +67,6 @@ const Auth = () => {
 
     if (isSignup) dispatch(signup(form, navigate));
     else dispatch(signin(form, navigate));
-
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => prevProgress + 20);
-    }, 1000);
-
-    setTimeout(() => {
-      clearInterval(timer);
-      dispatch(resetError());
-      setProgress(0);
-    }, 5500);
   };
 
   const handleChange = (e) =>
@@ -94,13 +80,12 @@ const Auth = () => {
       dispatch(authenticateUserByGoogle({ result, token }));
       navigate("/");
     } catch (error) {
-      console.log(error.message);
+      dispatch(setError("FAILED_GOOGLE_AUTH"));
     }
   };
 
   const googleFailure = (error) => {
-    console.log(error);
-    alert("Google Sign in failed.. try again !");
+    dispatch(setError("FAILED_GOOGLE_AUTH"));
   };
 
   return (
@@ -112,18 +97,6 @@ const Auth = () => {
         <Typography component="h1" variant="h5">
           {isSignup ? "Sign up" : "Sign in"}
         </Typography>
-        {error && (
-          <div className={classes.error}>
-            <Typography variant="body1" color="error">
-              {error}
-            </Typography>
-            <CircularProgress
-              style={{ marginLeft: "0.5rem" }}
-              variant="determinate"
-              value={progress}
-            />
-          </div>
-        )}
         <form className={classes.form} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             {isSignup && (
