@@ -48,8 +48,7 @@ const Auth = () => {
   useEffect(() => {
     function start() {
       gapi.client.init({
-        clientId:
-          "684382116518-7ldeoeun521n5odegl70meeqkd195qnc.apps.googleusercontent.com",
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         scope: "email",
       });
     }
