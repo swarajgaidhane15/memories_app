@@ -31,15 +31,21 @@ export default makeStyles((theme) => ({
   userName: {
     display: "flex",
     alignItems: "center",
-    marginRight: '2rem',
+    marginRight: "2rem",
   },
   brandContainer: {
     display: "flex",
     alignItems: "center",
   },
   purple: {
-    marginRight: '0.5rem',
+    marginRight: "0.5rem",
     color: theme.palette.getContrastText(deepPurple[500]),
     backgroundColor: deepPurple[500],
+  },
+  to_user: {
+    display: "flex",
+    justifyContent: "center",
+    textDecoration: "none",
+    color: '#000',
   },
 }));

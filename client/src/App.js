@@ -12,6 +12,7 @@ import Home from "./components/Home/Home";
 import Auth from "./components/Auth/Auth";
 import PostDetails from "./components/PostDetails/PostDetails";
 import ErrorSnackbar from "./components/ErrorSnackbar/ErrorSnackbar";
+import User from "./components/User/User";
 
 const ProtectedRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -34,6 +35,7 @@ const App = () => {
           <Route exact path="/posts" element={<Home />} />
           <Route exact path="/posts/search" element={<Home />} />
           <Route exact path="/posts/:id" element={<PostDetails />} />
+          <Route exact path="/user/:id" element={<User />} />
           <Route
             exact
             path="/auth"

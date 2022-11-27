@@ -34,6 +34,28 @@ export const signin = async (req, res) => {
   }
 };
 
+export const googleAuth = async (req, res) => {
+  const { name, imageUrl, email } = req.body;
+
+  try {
+    const existingUser = await User.find({ email });
+
+    if (!existingUser) return res.status(200).json({ message: "User exists" });
+
+    const newUser = await User.create({
+      name,
+      email,
+      imageUrl,
+      isGoogleSignIn: true,
+      password: "none",
+    });
+
+    return res.json(200).json({ result: newUser });
+  } catch (error) {
+    res.status(500).json({ message: "UNKNOWN_ERROR" });
+  }
+};
+
 export const signup = async (req, res) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
 

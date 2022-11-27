@@ -53,4 +53,8 @@ export default makeStyles({
     display: "block",
     textAlign: "initial",
   },
+  to_user: {
+    textDecoration: "none",
+    color: "white",
+  },
 });

@@ -8,6 +8,7 @@ import {
   updateSelectedPost,
   deleteSelectedPost,
   fetchBySearch,
+  fetchPostForUser,
 } from "./postSlice";
 
 // Actions
@@ -41,6 +42,17 @@ export const getPost = (id) => {
       dispatch(fetchPost(data));
     } catch (error) {
       dispatch(setError("GET_POST"));
+    }
+  };
+};
+
+export const getUserSpecificPosts = (id) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await api.fetchUserPosts(id);
+      dispatch(fetchPostForUser(data));
+    } catch (error) {
+      dispatch(setError("NO_POSTS"));
     }
   };
 };

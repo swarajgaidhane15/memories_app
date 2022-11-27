@@ -4,11 +4,12 @@ import { authenticateUser, logoutUser } from "./authSlice";
 import { setError } from "./errorAction";
 
 export const authenticateUserByGoogle = (data) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     try {
-      dispatch(authenticateUser(data));
+      const { result } = await api.googleSignin(data);
+      dispatch(authenticateUser({ ...data, result }));
     } catch (error) {
-      dispatch(setError('UNKNOWN_ERROR'))
+      dispatch(setError("UNKNOWN_ERROR"));
     }
   };
 };
@@ -19,7 +20,7 @@ export const logoutAction = () => {
       localStorage.removeItem("profile");
       dispatch(logoutUser());
     } catch (error) {
-      dispatch(setError('UNKNOWN_ERROR'))
+      dispatch(setError("UNKNOWN_ERROR"));
     }
   };
 };
@@ -49,7 +50,7 @@ export const signup = (formData, navigate) => {
 
       navigate("/");
     } catch (error) {
-      dispatch(setError('UNKNOWN_ERROR'))
+      dispatch(setError("UNKNOWN_ERROR"));
     }
   };
 };

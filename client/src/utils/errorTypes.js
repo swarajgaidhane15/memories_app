@@ -11,4 +11,5 @@ export const ERROR_TYPES = {
   UPDATE_POST: "Couldn't update the memory. Try again !",
   DELETE_POST: "Couldn't delete the memory. Try again !",
   LIKE_POST: "Couldn't like the memory. Try again !",
+  NO_POSTS: "No posts found !",
 };

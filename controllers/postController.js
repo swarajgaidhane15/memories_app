@@ -1,5 +1,6 @@
-import mongoose, { get } from "mongoose";
+import mongoose from "mongoose";
 import Post from "../models/post.js";
+import User from "../models/user.js";
 
 export const getAllPosts = async (req, res) => {
   const { page } = req.query;
@@ -12,13 +13,11 @@ export const getAllPosts = async (req, res) => {
       .sort({ _id: -1 })
       .limit(LIMIT)
       .skip(startIndex);
-    res
-      .status(200)
-      .json({
-        posts,
-        currentPage: Number(page),
-        numberOfPages: Math.ceil(total / LIMIT),
-      });
+    res.status(200).json({
+      posts,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(total / LIMIT),
+    });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -47,6 +46,23 @@ export const fetchPostsBySearch = async (req, res) => {
     });
 
     res.status(200).json(posts);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getUserSpecificPosts = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+    user.password = undefined;
+
+    const posts = await Post.find({ creator: id }).sort({ _id: -1 });
+
+    return res.status(200).json({ user, posts });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }

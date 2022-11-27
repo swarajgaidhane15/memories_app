@@ -14,7 +14,7 @@ import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
 
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { deletePost, likePost } from "../../../slices/postAction";
 import useStyles from "./styles";
@@ -66,37 +66,41 @@ const Post = ({ post, setCurrentId }) => {
 
   return (
     <Card className={classes.card} elevation={6}>
+      <CardMedia
+        className={classes.media}
+        image={
+          post.selectedFile ||
+          "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
+        }
+        title={post.title}
+      />
+      <div className={classes.overlay}>
+        <Typography variant="h6">
+          <Link className={classes.to_user} to={`/user/${post.creator}`}>
+            {post.name}
+          </Link>
+        </Typography>
+        <Typography variant="body2">
+          {moment(post.createdAt).fromNow()}
+        </Typography>
+      </div>
+      {isPostCreatedbyUser && (
+        <div className={classes.overlay2}>
+          <Button
+            style={{ color: "white" }}
+            size="small"
+            onClick={() => setCurrentId(post._id)}
+          >
+            <MoreHorizIcon fontSize="medium" />
+          </Button>
+        </div>
+      )}
       <ButtonBase
         component="span"
         name="test"
         className={classes.cardAction}
         onClick={openPost}
       >
-        <CardMedia
-          className={classes.media}
-          image={
-            post.selectedFile ||
-            "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
-          }
-          title={post.title}
-        />
-        <div className={classes.overlay}>
-          <Typography variant="h6">{post.name}</Typography>
-          <Typography variant="body2">
-            {moment(post.createdAt).fromNow()}
-          </Typography>
-        </div>
-        {isPostCreatedbyUser && (
-          <div className={classes.overlay2}>
-            <Button
-              style={{ color: "white" }}
-              size="small"
-              onClick={() => setCurrentId(post._id)}
-            >
-              <MoreHorizIcon fontSize="medium" />
-            </Button>
-          </div>
-        )}
         {post?.tags?.length && (
           <div className={classes.details}>
             <Typography variant="body2" color="textSecondary" component="h2">

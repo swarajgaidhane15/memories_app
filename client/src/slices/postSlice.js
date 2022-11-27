@@ -7,6 +7,7 @@ export const postSlice = createSlice({
     post: {},
     numberOfPages: 0,
     currentPage: 1,
+    user: null,
   },
   reducers: {
     fetchPosts: (state, { payload: { posts, currentPage, numberOfPages } }) => {
@@ -27,6 +28,13 @@ export const postSlice = createSlice({
       return {
         ...state,
         posts: payload,
+      };
+    },
+    fetchPostForUser: (state, { payload: { user, posts } }) => {
+      return {
+        ...state,
+        posts,
+        user,
       };
     },
     createNewPost: (state, { payload }) => {
@@ -56,6 +64,7 @@ export const {
   fetchPosts,
   fetchPost,
   fetchBySearch,
+  fetchPostForUser,
   createNewPost,
   updateSelectedPost,
   deleteSelectedPost,
